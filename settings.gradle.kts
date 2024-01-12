@@ -67,6 +67,9 @@ dependencyResolutionManagement {
                 bundleName = "jooq"
             )
             libsAndBundle("org.jooq", jooqVersion, "jooq-codegen")
+
+            // Misc
+            library("microutils-logging", "io.github.microutils", "kotlin-logging-jvm").version("3.0.5")
         }
     }
 }

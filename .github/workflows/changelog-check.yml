@@ -1,0 +1,34 @@
+name: Changelog check
+
+on:
+  pull_request:
+    branches: [ master ]
+env:
+  MESSAGE_ID: "${{ github.ref_name }}-changelog-comment"
+jobs:
+  check-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v34
+        with:
+          files: |
+            CHANGES.md
+      - name: Upsert comment if CHANGES.md has not been changed
+        if: steps.changed-files.outputs.any_modified != 'true'
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            **⚠️ CHANGES.md has not been changed**
+            That might be totally fine, but please make it sure that you didn't forget to update it!
+          message-id: ${{ env.MESSAGE_ID }}
+      - name: Upsert comment if CHANGES.md has been changed
+        if: steps.changed-files.outputs.any_modified == 'true'
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            **✅ CHANGES.md has been changed**
+            It doesn't mean that it contains a useful entry, but at least it was modified.
+          message-id: ${{ env.MESSAGE_ID }}

@@ -34,6 +34,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.reactive)
     implementation(libs.bundles.jooq)
+    implementation(libs.microutils.logging)
 }
 
 publishing {
