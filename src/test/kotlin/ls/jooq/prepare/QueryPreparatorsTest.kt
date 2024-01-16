@@ -13,7 +13,7 @@ import ls.jooq.execute.awaitAll
 import ls.jooq.execute.create
 
 @DBTest
-class RecordPreparatorsTest : FreeSpec({
+class QueryPreparatorsTest : FreeSpec({
 
     val ctx = DBExtension.dslContext
 

@@ -33,15 +33,13 @@ fun <R : UpdatableRecord<R>> DSLContext.update(record: R): UpdateQuery<R> {
     return query
 }
 
-private fun <T> Field<T>.equalsOrIsNull(value: T?): Condition {
-    return if (value == null) isNull() else eq(value)
-}
+private fun <T> Field<T>.equalsOrIsNull(value: T?): Condition = if (value == null) isNull() else eq(value)
 
 private fun <T> addCondition(query: UpdateQuery<*>, record: Record, field: Field<T>) {
     query.addConditions(field.equalsOrIsNull(record.get(field)))
 }
 
-fun addConditions(query: UpdateQuery<*>, record: Record, vararg keys: Field<*>) {
+private fun addConditions(query: UpdateQuery<*>, record: Record, vararg keys: Field<*>) {
     for (field in keys) addCondition(query, record, field)
 }
 
