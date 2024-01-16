@@ -1,4 +1,4 @@
-package ls.jooq
+package ls.jooq.execute
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -42,7 +42,7 @@ suspend fun <T : Any> Publisher<Record1<T>>.awaitFirstOrNull(): T? = awaitFirstO
  * @param R the type of the records in the result set.
  * @return a list of [T] objects.
  */
-suspend inline fun <reified T, R : Record> Publisher<R>.awaitAll(): List<T> = awaitFlow<T, R>().toList()
+suspend inline fun <reified T, R : Record> Publisher<R>.awaitAll(): List<T> = asFlowOf<T, R>().toList()
 
 /**
  * Returns the result set as a [Flow] of [T] objects.
@@ -51,4 +51,4 @@ suspend inline fun <reified T, R : Record> Publisher<R>.awaitAll(): List<T> = aw
  * @param R the type of the records in the result set.
  * @return a [Flow] of [T] objects.
  */
-inline fun <reified T, R : Record> Publisher<R>.awaitFlow(): Flow<T> = asFlow().map { it.into(T::class.java) }
+inline fun <reified T, R : Record> Publisher<R>.asFlowOf(): Flow<T> = asFlow().map { it.into(T::class.java) }
