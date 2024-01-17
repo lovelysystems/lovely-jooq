@@ -32,7 +32,6 @@ koverReport {
 }
 
 tasks.dokkaHtml {
-    // TODO introduce the versioning plugin and publish the docs on tag creation to GH pages
     outputDirectory.set(projectDir.resolve("docs/html"))
 }
 
