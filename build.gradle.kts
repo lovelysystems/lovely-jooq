@@ -31,10 +31,6 @@ koverReport {
     }
 }
 
-tasks.dokkaHtml {
-    outputDirectory.set(projectDir.resolve("docs/html"))
-}
-
 if (JavaVersion.current() != JavaVersion.VERSION_17) {
     // we require Java 17 here, to ensure we are always using the same version as the docker images are using
     error("Java 17 is required for this Project, found ${JavaVersion.current()}")
