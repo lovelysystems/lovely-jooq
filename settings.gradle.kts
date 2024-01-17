@@ -36,6 +36,14 @@ dependencyResolutionManagement {
     // Centralized repository definitions
     repositories {
         mavenCentral()
+
+        // Our own source of non-published Gradle plugins (e.g. lovely-db-testing)
+        maven {
+            url = uri("https://raw.github.com/lovelysystems/maven/master/releases")
+            content {
+                includeGroup("com.lovelysystems")
+            }
+        }
     }
 
     // Catalogs
@@ -77,17 +85,10 @@ dependencyResolutionManagement {
 
         create("testLibs") {
             val kotestVersion = "5.8.0"
-            val testcontainersVersion = "1.19.3"
 
             library("kotest-runner", "io.kotest", "kotest-runner-junit5").version(kotestVersion)
-            library(
-                "kotest-extensions-testcontainers",
-                "io.kotest.extensions",
-                "kotest-extensions-testcontainers"
-            ).version("2.0.2")
 
-            library("testcontainers-postgres", "org.testcontainers", "postgresql").version(testcontainersVersion)
-            library("testcontainers-r2dbc", "org.testcontainers", "r2dbc").version(testcontainersVersion)
+            library("lovely-db-testing", "com.lovelysystems", "lovely-db-testing").version("0.2.0")
             library("r2dbc-postgresql", "org.postgresql", "r2dbc-postgresql").version("1.0.4.RELEASE")
             library("jooq-codegen", "org.jooq", "jooq-codegen").version(jooqVersion)
 

@@ -27,6 +27,9 @@ jobs:
     - store_test_results:
         path: build/test-results
         when: always
+    - run:
+        name: Verify generated sources committed
+        command: git diff --exit-code HEAD --
     - save_cache:
         paths:
           - ~/.gradle/caches

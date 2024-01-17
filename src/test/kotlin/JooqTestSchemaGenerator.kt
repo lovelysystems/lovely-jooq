@@ -1,20 +1,20 @@
-import io.kotest.core.annotation.Ignored
+import DBExtension.pgSetup
 import io.kotest.core.spec.style.FreeSpec
 import org.jooq.codegen.GenerationTool
 import org.jooq.meta.jaxb.*
 
 /**
- * This test generates the jOOQ code from the test database schema. Need to be run manually only if the schema in
- * [DBExtension] changes.
- * The easies workflow is to run the schema initialization script on a local DB instance and then run this test against it.
+ * This test generates the jOOQ code from the test database schema. If you changed the test schema, you should definitely
+ * run this to make the generated jOOQ code up to date.
  */
-@Ignored
+@DBTest
 class JooqTestSchemaGenerator : FreeSpec({
 
     "should generate jooq code" {
 
-        // Change it if the configuration below differs from your local DB
-        val url = "jdbc:postgresql://localhost:25432/postgres"
+        val port = pgSetup.server.getMappedPort(5432)
+        val host = pgSetup.server.host
+        val url = "jdbc:postgresql://$host:$port/postgres"
         val username = "postgres"
         val password = "postgres"
 

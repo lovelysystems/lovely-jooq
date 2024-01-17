@@ -54,10 +54,8 @@ dependencies {
     implementation(libs.slf4j.api)
 
     testImplementation(testLibs.kotest.runner)
-    testImplementation(testLibs.kotest.extensions.testcontainers)
-    testImplementation(testLibs.testcontainers.r2dbc)
-    testImplementation(testLibs.testcontainers.postgres)
     testImplementation(testLibs.r2dbc.postgresql)
+    testImplementation(testLibs.lovely.db.testing)
     testImplementation(testLibs.jooq.codegen)
     testImplementation(testLibs.logback)
 }
