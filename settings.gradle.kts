@@ -91,7 +91,6 @@ dependencyResolutionManagement {
             library("r2dbc-postgresql", "org.postgresql", "r2dbc-postgresql").version("1.0.4.RELEASE")
             library("jooq-codegen", "org.jooq", "jooq-codegen").version(jooqVersion)
 
-//            library("microutils-logging", "io.github.microutils", "kotlin-logging-jvm").version("3.0.5")
             library("logback", "ch.qos.logback", "logback-classic").version("1.4.11")
         }
     }
