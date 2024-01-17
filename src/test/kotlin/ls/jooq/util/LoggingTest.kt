@@ -13,11 +13,21 @@ class LoggingTest : FreeSpec({
 
     val memoryAppender = ListAppender<ILoggingEvent>()
     val logger = LoggerFactory.getLogger("ls") as Logger
-    logger.level = Level.INFO
+    val initialLevel = logger.level
 
     beforeSpec {
+        logger.level = Level.INFO
         logger.addAppender(memoryAppender)
         memoryAppender.start()
+    }
+
+    afterSpec {
+        logger.level = initialLevel
+    }
+
+    afterTest {
+        // clear log messages to have a clean state for the next test
+        memoryAppender.list.clear()
     }
 
     "Logger.traceSQL()" - {
