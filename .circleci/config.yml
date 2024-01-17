@@ -2,8 +2,10 @@ version: 2.1
 
 jobs:
   test:
-    docker:
-      - image: cimg/base:2023.03
+    # machine is required, docker does not work because of testcontainers
+    # see https://www.testcontainers.org/supported_docker_environment/
+    machine:
+      image: ubuntu-2204:2023.04.2
     steps:
     - run:
         name: Install Java 17
@@ -24,6 +26,7 @@ jobs:
         command: ./gradlew check
     - store_test_results:
         path: build/test-results
+        when: always
     - save_cache:
         paths:
           - ~/.gradle/caches
