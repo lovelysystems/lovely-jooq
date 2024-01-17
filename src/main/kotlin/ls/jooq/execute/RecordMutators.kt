@@ -14,9 +14,10 @@ import org.jooq.UpdatableRecord
  * @param R the type of the record
  * @param init a function to modify the record before insertion
  * @return the inserted record
+ * @throws IllegalStateException if the record has no default constructor
  */
 suspend inline fun <reified R : UpdatableRecord<R>> DSLContext.create(init: R.() -> Unit = {}): R {
-    val constructor = R::class.java.getConstructor() ?: error("no default constructor found for ${R::class}")
+    val constructor = checkNotNull(R::class.java.getConstructor()) { "no default constructor found for ${R::class}" }
     val record = constructor.newInstance()
     record.init()
     return insert(record).returning().awaitSingle()

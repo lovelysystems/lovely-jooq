@@ -23,11 +23,12 @@ fun <R : UpdatableRecord<R>> DSLContext.insert(record: UpdatableRecord<R>): Inse
  * @param R the type of the record
  * @param record the record to update
  * @return the update statement
+ * @throws IllegalStateException if the record has no primary key
  */
 @CheckReturnValue
 fun <R : UpdatableRecord<R>> DSLContext.update(record: R): UpdateQuery<R> {
     val query = updateQuery(record.table)
-    val pk = record.table.primaryKey ?: error("${record.table} has no primary key")
+    val pk = checkNotNull(record.table.primaryKey) { "${record.table} has no primary key" }
     addConditions(query, record, *pk.fieldsArray)
     query.setRecord(record)
     return query
