@@ -5,6 +5,8 @@ pluginManagement {
 
         id("com.lovelysystems.gradle") version "1.12.0"
         id("io.gitlab.arturbosch.detekt") version "1.23.4"
+        id("org.jetbrains.kotlinx.kover") version "0.7.5"
+        id("org.jetbrains.dokka") version "1.9.10"
     }
 }
 
@@ -34,10 +36,20 @@ dependencyResolutionManagement {
     // Centralized repository definitions
     repositories {
         mavenCentral()
+
+        // Our own source of non-published Gradle plugins (e.g. lovely-db-testing)
+        maven {
+            url = uri("https://raw.github.com/lovelysystems/maven/master/releases")
+            content {
+                includeGroup("com.lovelysystems")
+            }
+        }
     }
 
     // Catalogs
     versionCatalogs {
+        val jooqVersion = "3.18.6"
+
         create("libs") {
             // Kotlin & KotlinX
             val kotlinGroup = "org.jetbrains.kotlin"
@@ -56,7 +68,6 @@ dependencyResolutionManagement {
             library("$coroutinesPrefix-test", kotlinxGroup, "$coroutinesPrefix-test").version(coroutinesVersion)
 
             // Jooq
-            val jooqVersion = "3.18.6"
             libsAndBundle(
                 "org.jooq",
                 jooqVersion,
@@ -66,7 +77,22 @@ dependencyResolutionManagement {
                 "jooq-postgres-extensions",
                 bundleName = "jooq"
             )
-            libsAndBundle("org.jooq", jooqVersion, "jooq-codegen")
+
+            // Misc
+            library("spotbugs-annotations", "com.github.spotbugs", "spotbugs-annotations").version("4.8.3")
+            library("slf4j-api", "org.slf4j", "slf4j-api").version("2.0.11")
+        }
+
+        create("testLibs") {
+            val kotestVersion = "5.8.0"
+
+            library("kotest-runner", "io.kotest", "kotest-runner-junit5").version(kotestVersion)
+
+            library("lovely-db-testing", "com.lovelysystems", "lovely-db-testing").version("0.2.0")
+            library("r2dbc-postgresql", "org.postgresql", "r2dbc-postgresql").version("1.0.4.RELEASE")
+            library("jooq-codegen", "org.jooq", "jooq-codegen").version(jooqVersion)
+
+            library("logback", "ch.qos.logback", "logback-classic").version("1.4.11")
         }
     }
 }

@@ -1,0 +1,51 @@
+name: Generate & deploy docs to GitHub Pages
+
+on:
+  push:
+    tags:
+      - '*'
+  # To make it able to run manually, TODO remove when we're sure it's working
+  workflow_dispatch:
+env:
+  VERSION: "${{ github.ref_name }}"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      # Setting up pages and generating the docs
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+      - name: Generate API documentation
+        run: |
+          ./gradlew -Pversion=$VERSION dokkaHtml
+      # Uploading the generated files as build artifacts
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./build/dokka/html
+
+  deploy:
+    needs: build
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write
+      id-token: write # to verify the deployment originates from an appropriate source
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
