@@ -6,8 +6,6 @@ on:
       - '*'
   # To make it able to run manually, TODO remove when we're sure it's working
   workflow_dispatch:
-env:
-  VERSION: "${{ github.ref_name }}"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,9 +24,12 @@ jobs:
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
+      - name: 'Get Previous tag'
+        id: lasttag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
       - name: Generate API documentation
         run: |
-          ./gradlew -Pversion=$VERSION dokkaHtml
+          ./gradlew -PdocVersion=${{ steps.lasttag.outputs.tag }} dokkaHtml
       # Uploading the generated files as build artifacts
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

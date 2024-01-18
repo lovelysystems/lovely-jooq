@@ -1,3 +1,5 @@
+import java.net.URL
+
 plugins {
     kotlin("jvm")
     id("com.lovelysystems.gradle")
@@ -58,6 +60,20 @@ dependencies {
     testImplementation(testLibs.lovely.db.testing)
     testImplementation(testLibs.jooq.codegen)
     testImplementation(testLibs.logback)
+}
+
+tasks.dokkaHtml {
+    val versionToUse = (project.findProperty("docVersion") as? String?) ?: project.version.toString()
+    moduleVersion.set(versionToUse)
+    dokkaSourceSets {
+        named("main") {
+            sourceLink {
+                localDirectory.set(projectDir.resolve("src"))
+                remoteUrl.set(URL("https://github.com/lovelysystems/lovely-jooq/tree/master/src"))
+                remoteLineSuffix.set("#L")
+            }
+        }
+    }
 }
 
 publishing {
