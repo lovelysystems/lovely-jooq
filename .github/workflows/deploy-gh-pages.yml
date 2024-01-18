@@ -1,9 +1,10 @@
 name: Generate & deploy docs to GitHub Pages
 
 on:
-  pull_request:
-    branches: [ master ] # TODO change after experimenting
-  # To make it able to run manually
+  push:
+    tags:
+      - '*'
+  # To make it able to run manually, TODO remove when we're sure it's working
   workflow_dispatch:
 env:
   VERSION: "${{ github.ref_name }}"
@@ -28,6 +29,7 @@ jobs:
       - name: Generate API documentation
         run: |
           ./gradlew -Pversion=$VERSION dokkaHtml
+      # Uploading the generated files as build artifacts
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
