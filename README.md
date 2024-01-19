@@ -4,16 +4,8 @@ This project contains opinionated helpers and extensions of [jOOQ](https://githu
 
 Built on **jOOQ 3.18.6**.
 
+You can find the **documentation [here](https://lovelysystems.github.io/lovely-jooq/)**.
+
 ## Prerequisites
 
 - Java 17 installed and selected by default
-
-## Generating HTML docs
-
-In case you would like to release a new version, it's also important to update the generated docs via Dokka. To do so, you can run:
-
-```shell
-./gradlew dokkaHtml
-```
-
-The generated docs will be available under [docs/html/index.html](docs/html/index.html).
