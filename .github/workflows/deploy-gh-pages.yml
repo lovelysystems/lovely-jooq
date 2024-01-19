@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      last-tag: ${{ steps.last-tag.outputs.tag }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -25,11 +27,11 @@ jobs:
         id: pages
         uses: actions/configure-pages@v4
       - name: 'Get Previous tag'
-        id: lasttag
+        id: last-tag
         uses: "WyriHaximus/github-action-get-previous-tag@v1"
       - name: Generate API documentation
         run: |
-          ./gradlew -PdocVersion=${{ steps.lasttag.outputs.tag }} dokkaHtml
+          ./gradlew -PdocVersion=${{ steps.last-tag.outputs.tag }} dokkaHtml
       # Uploading the generated files as build artifacts
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -42,6 +44,8 @@ jobs:
     permissions:
       pages: write
       id-token: write # to verify the deployment originates from an appropriate source
+    outputs:
+      docs-url: ${{ steps.deployment.outputs.page_url }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -50,3 +54,62 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  notify:
+    needs: [ build, deploy ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Slack
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Hello Lovelies,\n Version `${{needs.build.outputs.last-tag}}` of *<${{github.server_url}}/${{github.repository}}|${{github.repository}}>* was released just now!"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":page_facing_up: Read the docs",
+                        "emoji": true
+                      },
+                      "url": "${{needs.deploy.outputs.docs-url}}"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":clipboard: Changelog",
+                        "emoji": true
+                      },
+                      "url": "${{github.server_url}}/${{github.repository}}/blob/master/CHANGES.md"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":package: Commits",
+                        "emoji": true
+                      },
+                      "url": "${{github.server_url}}/${{github.repository}}/commits/${{needs.build.outputs.last-tag}}"
+                    }
+                  ]
+                }
+              ]
+            }
