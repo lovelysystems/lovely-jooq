@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - '*'
-  # To make it able to run manually, TODO remove when we're sure it's working
-  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
