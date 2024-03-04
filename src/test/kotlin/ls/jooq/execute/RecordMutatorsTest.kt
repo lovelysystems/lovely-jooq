@@ -3,6 +3,7 @@ package ls.jooq.execute
 import DBExtension
 import DBTest
 import io.kotest.core.spec.style.FreeSpec
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.reactive.awaitSingle
@@ -13,6 +14,31 @@ import ls.jooq.db.generated.tables.records.AuthorRecord
 class RecordMutatorsTest : FreeSpec({
 
     val ctx = DBExtension.dslContext
+
+    "DSLContext.insertAndRefreshRecord" - {
+
+        "should insert the record" {
+            val record = AuthorRecord()
+            record.firstName = "max"
+            record.lastName = "irrelevant"
+            ctx.insertAndRefreshRecord(record)
+
+            val insertedContent = ctx.selectFrom(Tables.AUTHOR).awaitAll<AuthorRecord, _>().shouldHaveSize(1).first()
+            insertedContent.firstName shouldBe "max"
+            insertedContent.lastName shouldBe "irrelevant"
+            insertedContent.id.shouldNotBeNull()
+        }
+
+        "after the call the record should have values set from database defaults" {
+            val record = AuthorRecord()
+            record.firstName = "max"
+            record.lastName = "irrelevant"
+            ctx.insertAndRefreshRecord(record)
+
+            record.id.shouldNotBeNull()
+            record.created.shouldNotBeNull()
+        }
+    }
 
     "DSLContext.create<T>()" - {
 

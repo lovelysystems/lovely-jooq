@@ -1,5 +1,11 @@
 # Changes
 
+## unreleased
+
+### Feature
+
+- added `insertAndRefreshRecord` function
+
 ## 2024-01-18 / 0.1.0
 
 ### Feature
