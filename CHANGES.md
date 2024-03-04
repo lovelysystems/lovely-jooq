@@ -1,6 +1,6 @@
 # Changes
 
-## unreleased
+## 2024-03-04 / 0.2.0
 
 ### Feature
 
