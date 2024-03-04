@@ -1,5 +1,6 @@
 package ls.jooq.execute
 
+import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitSingle
 import ls.jooq.prepare.insert
 import ls.jooq.prepare.update
@@ -45,3 +46,16 @@ suspend fun <R : UpdatableRecord<R>> DSLContext.updateIfChangedAndExecute(record
         // SQL [update "table" set [ no fields are updated ] where "table"."pk" = $1]; syntax error at or near "["
         this.updateAndExecute(record)
     } else null
+
+/**
+ * Inserts a [record] and sets the values of [record] from the returned values of the insert
+ *
+ * @param R the type of record
+ * @param record - the record to insert
+ * @return the inserted record, note that also the param record will have updated values
+ */
+suspend fun <R : UpdatableRecord<R>> DSLContext.insertAndRefreshRecord(record: UpdatableRecord<R>): UpdatableRecord<R> {
+    val inserted = insert(record).returning().awaitFirst()
+    record.from(inserted)
+    return record
+}
