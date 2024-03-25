@@ -2,7 +2,7 @@
 
 This project contains opinionated helpers and extensions of [jOOQ](https://github.com/jOOQ/jOOQ) used at Lovely Systems.
 
-Built on **jOOQ 3.18.6**.
+Built on **jOOQ 3.19.6**.
 
 You can find the **documentation [here](https://lovelysystems.github.io/lovely-jooq/)**.
 

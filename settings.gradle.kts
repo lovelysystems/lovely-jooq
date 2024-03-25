@@ -4,9 +4,9 @@ pluginManagement {
         kotlin("jvm") version kotlinVersion
 
         id("com.lovelysystems.gradle") version "1.12.0"
-        id("io.gitlab.arturbosch.detekt") version "1.23.4"
+        id("io.gitlab.arturbosch.detekt") version "1.23.6"
         id("org.jetbrains.kotlinx.kover") version "0.7.5"
-        id("org.jetbrains.dokka") version "1.9.10"
+        id("org.jetbrains.dokka") version "1.9.20"
     }
 }
 
@@ -48,7 +48,7 @@ dependencyResolutionManagement {
 
     // Catalogs
     versionCatalogs {
-        val jooqVersion = "3.18.6"
+        val jooqVersion = "3.19.6"
 
         create("libs") {
             // Kotlin & KotlinX
@@ -84,7 +84,7 @@ dependencyResolutionManagement {
         }
 
         create("testLibs") {
-            val kotestVersion = "5.8.0"
+            val kotestVersion = "5.8.1"
 
             library("kotest-runner", "io.kotest", "kotest-runner-junit5").version(kotestVersion)
 
@@ -92,7 +92,7 @@ dependencyResolutionManagement {
             library("r2dbc-postgresql", "org.postgresql", "r2dbc-postgresql").version("1.0.4.RELEASE")
             library("jooq-codegen", "org.jooq", "jooq-codegen").version(jooqVersion)
 
-            library("logback", "ch.qos.logback", "logback-classic").version("1.4.11")
+            library("logback", "ch.qos.logback", "logback-classic").version("1.5.3")
         }
     }
 }
