@@ -4,10 +4,11 @@ import DBExtension
 import DBTest
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import ls.jooq.execute.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 import ls.jooq.db.generated.Tables
 import ls.jooq.db.generated.tables.records.AuthorRecord
@@ -69,8 +70,7 @@ class RecordMutatorsTest : FreeSpec({
     "DSLContext.upsert<R>()" - {
 
         "should insert if the given primary key doesn't exist" {
-            val count: Int = ctx.selectCount().from(Tables.AUTHOR).awaitFirst()
-            count shouldBe 0
+            ctx.selectFrom(Tables.AUTHOR).awaitFirstOrNull().shouldBeNull()
             val author = ctx.upsert<AuthorRecord> {
                 id = 1
                 firstName = "Max"
@@ -82,7 +82,7 @@ class RecordMutatorsTest : FreeSpec({
         }
 
         "should insert if no primary key is set and the primary key is generated" {
-            ctx.selectCount().from(Tables.AUTHOR).awaitFirst() shouldBe 0
+            ctx.selectFrom(Tables.AUTHOR).awaitFirstOrNull().shouldBeNull()
             val author = ctx.upsert<AuthorRecord> {
                 firstName = "Max"
                 lastName = "Muster"
@@ -93,7 +93,7 @@ class RecordMutatorsTest : FreeSpec({
         }
 
         "should update values of existing record with same primary key" {
-            ctx.selectCount().from(Tables.AUTHOR).awaitFirst() shouldBe 0
+            ctx.selectFrom(Tables.AUTHOR).awaitFirstOrNull().shouldBeNull()
             val author = ctx.upsert<AuthorRecord> {
                 firstName = "Max"
                 lastName = "Muster"
