@@ -6,6 +6,8 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import ls.jooq.execute.awaitFirst
+import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitSingle
 import ls.jooq.db.generated.Tables
 import ls.jooq.db.generated.tables.records.AuthorRecord
@@ -14,6 +16,10 @@ import ls.jooq.db.generated.tables.records.AuthorRecord
 class RecordMutatorsTest : FreeSpec({
 
     val ctx = DBExtension.dslContext
+
+    afterTest {
+        ctx.deleteFrom(Tables.AUTHOR).awaitFirst()
+    }
 
     "DSLContext.insertAndRefreshRecord" - {
 
@@ -57,6 +63,52 @@ class RecordMutatorsTest : FreeSpec({
             authorInDb.firstName shouldBe "foo"
             authorInDb.lastName shouldBe "bar"
             authorInDb.created.shouldNotBeNull() // Default values from DB should be populated as well
+        }
+    }
+
+    "DSLContext.upsert<R>()" - {
+
+        "should insert if the given primary key doesn't exist" {
+            val count: Int = ctx.selectCount().from(Tables.AUTHOR).awaitFirst()
+            count shouldBe 0
+            val author = ctx.upsert<AuthorRecord> {
+                id = 1
+                firstName = "Max"
+                lastName = "Muster"
+            }
+
+            val foundAuthor = ctx.selectFrom(Tables.AUTHOR).awaitFirst()
+            foundAuthor shouldBe author
+        }
+
+        "should insert if no primary key is set and the primary key is generated" {
+            ctx.selectCount().from(Tables.AUTHOR).awaitFirst() shouldBe 0
+            val author = ctx.upsert<AuthorRecord> {
+                firstName = "Max"
+                lastName = "Muster"
+            }
+
+            val foundAuthor = ctx.selectFrom(Tables.AUTHOR).awaitFirst()
+            foundAuthor shouldBe author
+        }
+
+        "should update values of existing record with same primary key" {
+            ctx.selectCount().from(Tables.AUTHOR).awaitFirst() shouldBe 0
+            val author = ctx.upsert<AuthorRecord> {
+                firstName = "Max"
+                lastName = "Muster"
+            }
+
+            val updatedAuthor = ctx.upsert<AuthorRecord> {
+                id = author.id
+                firstName = "Not max"
+                lastName = "Muster"
+            }
+
+            val foundAuthor = ctx.selectFrom(Tables.AUTHOR).awaitFirst()
+            foundAuthor.firstName shouldBe "Not max"
+            updatedAuthor.id shouldBe foundAuthor.id
+            author.id shouldBe foundAuthor.id
         }
     }
 

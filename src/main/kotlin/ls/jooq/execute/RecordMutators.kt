@@ -59,3 +59,18 @@ suspend fun <R : UpdatableRecord<R>> DSLContext.insertAndRefreshRecord(record: U
     record.from(inserted)
     return record
 }
+
+suspend fun <R : UpdatableRecord<R>> DSLContext.upsert(record: R): R =
+    insertInto(record.table)
+        .set(record)
+        .onDuplicateKeyUpdate()
+        .set(record)
+        .returning()
+        .awaitFirst()
+
+suspend inline fun <reified R : UpdatableRecord<R>> DSLContext.upsert(init: R.() -> Unit): R {
+    val constructor = checkNotNull(R::class.java.getConstructor()) { "no default constructor found for ${R::class}" }
+    val record = constructor.newInstance()
+    record.init()
+    return upsert(record)
+}
