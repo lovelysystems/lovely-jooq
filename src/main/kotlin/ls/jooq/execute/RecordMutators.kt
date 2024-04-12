@@ -59,3 +59,33 @@ suspend fun <R : UpdatableRecord<R>> DSLContext.insertAndRefreshRecord(record: U
     record.from(inserted)
     return record
 }
+
+/**
+ * Upserts a [record].
+ * If the record already exists, it updates the existing record; otherwise, it inserts a new record.
+ *
+ * @param record The record to be upserted.
+ * @return The upserted record.
+ */
+suspend fun <R : UpdatableRecord<R>> DSLContext.upsert(record: R): R =
+    insertInto(record.table)
+        .set(record)
+        .onDuplicateKeyUpdate()
+        .set(record)
+        .returning()
+        .awaitFirst()
+
+/**
+ * Upserts a record created from the [init] block.
+ * If the record already exists, it updates the existing record; otherwise, it inserts a new record.
+ *
+ * @param init a function to modify the record before upsertion
+ * @return The upserted record.
+ * @throws IllegalStateException if the record has no default constructor
+ */
+suspend inline fun <reified R : UpdatableRecord<R>> DSLContext.upsert(init: R.() -> Unit): R {
+    val constructor = checkNotNull(R::class.java.getConstructor()) { "no default constructor found for ${R::class}" }
+    val record = constructor.newInstance()
+    record.init()
+    return upsert(record)
+}

@@ -1,5 +1,11 @@
 # Changes
 
+## Unreleased
+
+### Feature
+
+- added `DSLContext.upsert`
+
 ## 2024-03-26 / 0.3.0
 
 ### Feature
