@@ -26,7 +26,7 @@ jobs:
         command: ./gradlew check
     - store_test_results:
         path: build/test-results
-        when: always
+        when: true
     - run:
         name: Verify generated sources committed
         command: git diff --exit-code HEAD --
