@@ -1,5 +1,11 @@
 # Changes
 
+## 2025-09-25 / 0.4.1
+
+### Fix
+
+- fix github publish pages workflow
+
 ## 2025-09-25 / 0.4.0
 
 ### Feature
