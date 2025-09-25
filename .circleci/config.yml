@@ -5,7 +5,7 @@ jobs:
     # machine is required, docker does not work because of testcontainers
     # see https://www.testcontainers.org/supported_docker_environment/
     machine:
-      image: ubuntu-2204:2404:2024.11.1
+      image: ubuntu-2204:2024.11.1
     steps:
     - run:
         name: Install Java 21
