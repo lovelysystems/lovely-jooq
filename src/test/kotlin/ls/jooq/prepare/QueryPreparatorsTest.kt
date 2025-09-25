@@ -26,46 +26,46 @@ class QueryPreparatorsTest : FreeSpec({
                 val record = BookRecord().apply {
                     title = "foo"
                 }
-                // Resetting the changed flag to start with a clean sheet
-                record.changed(false)
+                // Resetting the touched flag to start with a clean sheet
+                record.touched(false)
                 record.valuesChanged() shouldBe false
-                record.changed() shouldBe false
+                record.touched() shouldBe false
 
                 // Doing the first update
                 record.title = "foo"
                 record.valuesChanged() shouldBe false
-                record.changed() shouldBe true // Built-in method should return true on purpose
+                record.touched() shouldBe true // Built-in method should return true on purpose
 
                 record.title = "bar"
                 record.valuesChanged() shouldBe true
-                record.changed() shouldBe true
+                record.touched() shouldBe true
 
                 // Reverting the changes
                 record.title = "foo"
                 record.valuesChanged() shouldBe false
-                record.changed() shouldBe true
+                record.touched() shouldBe true
 
-                // Resetting the changed flag to start with a clean sheet
-                record.changed(false)
+                // Resetting the touched flag to start with a clean sheet
+                record.touched(false)
                 record.title shouldBe "foo"
                 record.valuesChanged() shouldBe false
-                record.changed() shouldBe false
+                record.touched() shouldBe false
 
                 // Testing null handling
                 record.title = null
                 record.valuesChanged() shouldBe true
-                record.changed() shouldBe true
+                record.touched() shouldBe true
 
-                // Resetting the changed flag to start with a clean sheet
-                record.changed(false)
+                // Resetting the touched flag to start with a clean sheet
+                record.touched(false)
                 record.title shouldBe null
                 record.valuesChanged() shouldBe false
-                record.changed() shouldBe false
+                record.touched() shouldBe false
 
                 // Setting null again
                 record.title = null
                 record.valuesChanged() shouldBe false
-                record.changed() shouldBe true
+                record.touched() shouldBe true
             }
 
             "a Record that actually came from the DB and wasn't touched before" {
@@ -75,43 +75,43 @@ class QueryPreparatorsTest : FreeSpec({
                     lastName = "baz"
                 }
                 record.valuesChanged() shouldBe false
-                record.changed() shouldBe false
+                record.touched() shouldBe false
 
                 // Doing the first update
                 record.firstName = "foo"
                 record.valuesChanged() shouldBe false
-                record.changed() shouldBe true // Built-in method should return true on purpose
+                record.touched() shouldBe true // Built-in method should return true on purpose
 
                 record.firstName = "bar"
                 record.valuesChanged() shouldBe true
-                record.changed() shouldBe true
+                record.touched() shouldBe true
 
                 // Reverting the changes
                 record.firstName = "foo"
                 record.valuesChanged() shouldBe false
-                record.changed() shouldBe true
+                record.touched() shouldBe true
 
-                // Resetting the changed flag to start with a clean sheet
-                record.changed(false)
+                // Resetting the touched flag to start with a clean sheet
+                record.touched(false)
                 record.firstName shouldBe "foo"
                 record.valuesChanged() shouldBe false
-                record.changed() shouldBe false
+                record.touched() shouldBe false
 
                 // Testing null handling
                 record.firstName = null
                 record.valuesChanged() shouldBe true
-                record.changed() shouldBe true
+                record.touched() shouldBe true
 
-                // Resetting the changed flag to start with a clean sheet
-                record.changed(false)
+                // Resetting the touched flag to start with a clean sheet
+                record.touched(false)
                 record.firstName shouldBe null
                 record.valuesChanged() shouldBe false
-                record.changed() shouldBe false
+                record.touched() shouldBe false
 
                 // Setting null again
                 record.firstName = null
                 record.valuesChanged() shouldBe false
-                record.changed() shouldBe true
+                record.touched() shouldBe true
             }
         }
     }

@@ -1,41 +1,41 @@
-import java.net.URL
-
 plugins {
-    kotlin("jvm")
-    id("com.lovelysystems.gradle")
-    id("io.gitlab.arturbosch.detekt")
-    id("org.jetbrains.kotlinx.kover")
-    id("org.jetbrains.dokka")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.lovely.gradle)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.kover)
+    alias(libs.plugins.dokka)
     `maven-publish`
 }
 
 group = "com.lovelysystems"
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 lovely {
     gitProject()
 }
 
-koverReport {
-    defaults {
-        verify {
-            onCheck = true
-            rule {
-                bound {
-                    minValue = 90
-                    metric = kotlinx.kover.gradle.plugin.dsl.MetricType.INSTRUCTION
+kover {
+    reports {
+        total {
+            verify {
+                onCheck = true
+                rule {
+                    bound {
+                        minValue = 90
+                        coverageUnits = kotlinx.kover.gradle.plugin.dsl.CoverageUnit.INSTRUCTION
+                    }
                 }
             }
         }
     }
 }
 
-if (JavaVersion.current() != JavaVersion.VERSION_17) {
-    // we require Java 17 here, to ensure we are always using the same version as the docker images are using
-    error("Java 17 is required for this Project, found ${JavaVersion.current()}")
+if (JavaVersion.current() != JavaVersion.VERSION_21) {
+    // we require Java 21 here, to ensure we are always using the same version as the docker images are using
+    error("Java 21 is required for this Project, found ${JavaVersion.current()}")
 }
 
 tasks.test {
@@ -55,23 +55,21 @@ dependencies {
     implementation(libs.spotbugs.annotations)
     implementation(libs.slf4j.api)
 
-    testImplementation(testLibs.kotest.runner)
-    testImplementation(testLibs.r2dbc.postgresql)
-    testImplementation(testLibs.lovely.db.testing)
-    testImplementation(testLibs.jooq.codegen)
-    testImplementation(testLibs.logback)
+    testImplementation(libs.kotest.runner)
+    testImplementation(libs.r2dbc.postgresql)
+    testImplementation(libs.lovely.db.testing)
+    testImplementation(libs.jooq.codegen)
+    testImplementation(libs.logback)
 }
 
-tasks.dokkaHtml {
+dokka {
     val versionToUse = (project.findProperty("docVersion") as? String?) ?: project.version.toString()
     moduleVersion.set(versionToUse)
-    dokkaSourceSets {
-        named("main") {
-            sourceLink {
-                localDirectory.set(projectDir.resolve("src"))
-                remoteUrl.set(URL("https://github.com/lovelysystems/lovely-jooq/tree/master/src"))
-                remoteLineSuffix.set("#L")
-            }
+    dokkaSourceSets.main {
+        sourceLink {
+            localDirectory.set(projectDir.resolve("src"))
+            remoteUrl("https://github.com/lovelysystems/lovely-jooq/tree/master/src")
+            remoteLineSuffix.set("#L")
         }
     }
 }

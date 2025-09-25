@@ -45,8 +45,8 @@ private fun addConditions(query: UpdateQuery<*>, record: Record, vararg keys: Fi
 }
 
 /**
- * A simplified version of [Record.changed] that differentiates between real value changes and changes that actually set
- * the same value to a given field. The built-in [Record.changed] method consider every setter call on a record as a
+ * A simplified version of [Record.touched] that differentiates between real value changes and changes that actually set
+ * the same value to a given field. The built-in [Record.touched] method consider every setter call on a record as a
  * change which might be not beneficial in most of our use cases.
  * Might be problematic to use with records that doesn't come from the database originally, mostly because the default
  * values wouldn't be there on the created record, which could lead to inconsistency. Recommended to use when you grab a
@@ -61,7 +61,7 @@ private fun addConditions(query: UpdateQuery<*>, record: Record, vararg keys: Fi
 @CheckReturnValue
 fun Record.valuesChanged(): Boolean {
     for (i in 0..<size()) {
-        if (changed(i) && !Objects.equals(original(i), get(i))) return true
+        if (touched(i) && !Objects.equals(original(i), get(i))) return true
     }
     return false
 }
