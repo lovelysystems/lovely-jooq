@@ -6,7 +6,7 @@ import io.kotest.core.extensions.Extension
 
 object ProjectConfig : AbstractProjectConfig() {
 
-    override fun extensions(): List<Extension> = listOf(
+    override val extensions: List<Extension> = listOf(
         DBExtension,
     )
 }

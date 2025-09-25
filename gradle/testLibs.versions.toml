@@ -1,0 +1,13 @@
+[versions]
+jooq = "3.20.7"
+kotest = "6.0.3"
+logback = "1.5.18"
+lovely-db-testing = "0.2.0"
+r2dbc-postgresql = "1.0.7.RELEASE"
+
+[libraries]
+jooq-codegen = { module = "org.jooq:jooq-codegen", version.ref = "jooq" }
+kotest-runner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+lovely-db-testing = { module = "com.lovelysystems:lovely-db-testing", version.ref = "lovely-db-testing" }
+r2dbc-postgresql = { module = "org.postgresql:r2dbc-postgresql", version.ref = "r2dbc-postgresql" }

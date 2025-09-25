@@ -5,12 +5,12 @@ jobs:
     # machine is required, docker does not work because of testcontainers
     # see https://www.testcontainers.org/supported_docker_environment/
     machine:
-      image: ubuntu-2204:2023.04.2
+      image: ubuntu-2204:2404:2024.11.1
     steps:
     - run:
-        name: Install Java 17
+        name: Install Java 21
         command: |
-          sudo apt-get install openjdk-17-jre
+          sudo apt-get install openjdk-21-jre
           sudo update-alternatives --auto java
     - checkout
     - run:

@@ -1,0 +1,31 @@
+[versions]
+jooq = "3.20.7"
+kotlinx-coroutines = "1.10.2"
+slf4j = "2.0.17"
+spotbugs-annotations = "4.9.6"
+
+detekt = "1.23.8"
+dokka = "2.0.0"
+lovely-gradle = "1.16.0"
+kotlin = "2.2.20"
+kover = "0.9.2"
+
+[libraries]
+jooq = { module = "org.jooq:jooq", version.ref = "jooq" }
+jooq-kotlin = { module = "org.jooq:jooq-kotlin", version.ref = "jooq" }
+jooq-kotlin-coroutines = { module = "org.jooq:jooq-kotlin-coroutines", version.ref = "jooq" }
+jooq-postgres-extensions = { module = "org.jooq:jooq-postgres-extensions", version.ref = "jooq" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "kotlinx-coroutines" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+spotbugs-annotations = { module = "com.github.spotbugs:spotbugs-annotations", version.ref = "spotbugs-annotations" }
+
+[bundles]
+jooq = ["jooq", "jooq-kotlin", "jooq-kotlin-coroutines", "jooq-postgres-extensions"]
+
+[plugins]
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+lovely-gradle = { id = "com.lovelysystems.gradle", version.ref = "lovely-gradle" }
