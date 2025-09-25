@@ -55,11 +55,11 @@ dependencies {
     implementation(libs.spotbugs.annotations)
     implementation(libs.slf4j.api)
 
-    testImplementation(testLibs.kotest.runner)
-    testImplementation(testLibs.r2dbc.postgresql)
-    testImplementation(testLibs.lovely.db.testing)
-    testImplementation(testLibs.jooq.codegen)
-    testImplementation(testLibs.logback)
+    testImplementation(libs.kotest.runner)
+    testImplementation(libs.r2dbc.postgresql)
+    testImplementation(libs.lovely.db.testing)
+    testImplementation(libs.jooq.codegen)
+    testImplementation(libs.logback)
 }
 
 dokka {

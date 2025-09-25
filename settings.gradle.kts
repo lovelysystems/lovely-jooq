@@ -13,12 +13,6 @@ dependencyResolutionManagement {
         }
     }
 
-    // Catalogs
-    versionCatalogs {
-        create("testLibs") {
-            from(files("gradle/testLibs.versions.toml"))
-        }
-    }
 }
 
 rootProject.name = "lovely-jooq"
